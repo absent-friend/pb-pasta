@@ -27,6 +27,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "livesplit_core_bg.wasm",
+                "input": "src/livesplit-core/"
               }
             ],
             "styles": [

@@ -1,4 +1,24 @@
-# PbPasta
+# pb pasta
+
+Little web app that turns LiveSplit splits into an ASCII art display.
+
+## Build instructions
+
+You need to install [Rust] first and add the `wasm32-unknown-unknown` target:
+`rustup target add wasm32-unknown-unknown`
+
+You also need to install the `wasm-bindgen` CLI:
+`cargo install wasm-bindgen-cli`.
+
+Install dependencies with your package manager of choice. e.g.
+`pnpm install`
+
+Then run the `build:core` script to build `livesplit-core` and generate the wasm + TypeScript bindings. These will go in `src/livesplit-core`.
+`pnpm run build:core`
+
+Generic Angular info follows.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
 

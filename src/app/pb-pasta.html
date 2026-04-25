@@ -1,0 +1,13 @@
+
+<label for="splitsFile">Pick a file: </label>
+<input type="file" #splitsFile accept=".lss" (change)="setFile()" />
+<aside>No upload — it won't leave your browser.</aside>
+<output>
+  @if (pasta.hasValue()) {
+    <span>{{ pasta.value() }}</span>
+  } @else if (pasta.error()) {
+    <span>{{ pasta.error()?.message ?? 'pasta machine broke' }}</span>
+  } @else if (pasta.isLoading()) {
+    <span>making pasta...</span>
+  }
+</output>

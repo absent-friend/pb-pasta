@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 /bazel-out
+/src/livesplit-core
 
 # Node
 /node_modules
@@ -28,6 +29,7 @@ yarn-error.log
 !.vscode/extensions.json
 !.vscode/mcp.json
 .history/*
+*.code-workspace
 
 # Miscellaneous
 /.angular/cache
