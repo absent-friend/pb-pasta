@@ -2,6 +2,23 @@
 
 Little web app that turns LiveSplit splits into an ASCII art display.
 
+```
+========================================
+Spyro: Year of the Dragon               
+Any%                                    
+----------------------------------------
+Sunrise Spring                     -10.3
+Midday Garden                       -1.0
+Evening Lake                       -12.8
+Scorch                             -13.7
+Midnight Mountain                   +2.3
+  Helmet Proxy                     -13.9
+  Sorceress                        -11.3
+----------------------------------------
+                                 23:51.9
+========================================
+```
+
 ## Build instructions
 
 You need to install [Rust](https://rustup.rs/) first and add the `wasm32-unknown-unknown` target:
