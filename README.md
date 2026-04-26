@@ -4,7 +4,7 @@ Little web app that turns LiveSplit splits into an ASCII art display.
 
 ## Build instructions
 
-You need to install [Rust] first and add the `wasm32-unknown-unknown` target:
+You need to install [Rust](https://rustup.rs/) first and add the `wasm32-unknown-unknown` target:
 
 `rustup target add wasm32-unknown-unknown`
 
