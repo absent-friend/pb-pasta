@@ -14,7 +14,7 @@ export class PbPasta {
   
   /* form inputs and intermediate values */
   private splitsFileInput: Signal<ElementRef<HTMLInputElement>> = viewChild.required('splitsFile');
-  private splitsFile: WritableSignal<File|undefined> = signal(undefined);
+  private splitsFile: WritableSignal<Blob | undefined> = signal(undefined);
   private personalBest: Resource<PersonalBest | undefined> = resource({
     params: () => ({file: this.splitsFile()}),
     loader: async ({params}) => {
@@ -39,8 +39,38 @@ export class PbPasta {
     })
   );
 
+  public copyButtonText = signal('Copy');
+
+  constructor() {
+    fetch(new URL('./example.lss', window.location.href))
+      .then(resp => resp.blob())
+      .then(blob => this.splitsFile.set(blob))
+  }
+
   public setFile() {
     const file = this.splitsFileInput().nativeElement.files?.[0];
     this.splitsFile.set(file);
+  }
+
+  public enableDragAndDrop(event: DragEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    event.dataTransfer!.dropEffect = 'copy';
+  }
+
+  public droppedFile(event: DragEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    const files = event.dataTransfer?.files;
+    if (files) {
+      this.splitsFileInput().nativeElement.files = files;
+      this.setFile();
+    }
+  }
+
+  public copyPasta(pastaBox: HTMLOutputElement) {
+    navigator.clipboard.writeText(pastaBox.innerText);
+    this.copyButtonText.set('Copied!');
+    setTimeout(() => this.copyButtonText.set('Copy'), 5000);
   }
 }

@@ -5,7 +5,7 @@ import { Run, TimeRef } from '../../livesplit-core';
   providedIn: 'root',
 })
 export class RunParser {
-  async getPersonalBest(splits: File): Promise<PersonalBest> {
+  async getPersonalBest(splits: Blob): Promise<PersonalBest> {
     const fileContents = await splits.text();
     using parseResult = Run.parseString(fileContents, '');
     if (!parseResult.parsedSuccessfully()) {

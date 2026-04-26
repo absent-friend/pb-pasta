@@ -1,13 +1,23 @@
 
-<label for="splitsFile">Pick a file: </label>
-<input type="file" #splitsFile accept=".lss" (change)="setFile()" />
-<aside>No upload — it won't leave your browser.</aside>
-<output>
-  @if (pasta.hasValue()) {
-    <span>{{ pasta.value() }}</span>
-  } @else if (pasta.error()) {
-    <span>{{ pasta.error()?.message ?? 'pasta machine broke' }}</span>
-  } @else if (pasta.isLoading()) {
-    <span>making pasta...</span>
-  }
-</output>
+<main>
+  <div class="left-side">
+    <h1>pb pasta</h1>
+    <label for="splitsFile">Pick a LiveSplit file, and I'll turn it into pasta.</label>
+    <input type="file" id="splitsFile" #splitsFile accept=".lss" (change)="setFile()" />
+    <div class="drop-area" (dragover)="enableDragAndDrop($event)" (drop)="droppedFile($event)">
+      <span style="pointer-events: none; user-select: none;">or drag a file here.</span>
+    </div>
+  </div>
+  <div class="right-side">
+    <output #pastaBox for="splitsFile">
+      @if (pasta.hasValue()) {
+        <span>{{ pasta.value() }}</span>
+      } @else if (pasta.error()) {
+        <span>{{ pasta.error()?.message ?? 'pasta machine broke' }}</span>
+      } @else if (pasta.isLoading()) {
+        <span>making pasta...</span>
+      }
+    </output>
+    <button type="button" class="copy-button" (click)="copyPasta(pastaBox)" aria-live="polite">{{ copyButtonText() }}</button>
+  </div>
+</main>

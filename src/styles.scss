@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    display: grid;
+    margin: 8px;
+    height: calc(100vh - 16px);
+    align-items: center;
+    justify-items: center;
+
+    background-color: var(--bg-color);
+    color: var(--color);
+}
+
+:root {
+    --bg-color: rgb(5, 41, 5);
+    --color: rgb(245, 234, 214);
+}
