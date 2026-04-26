@@ -7,7 +7,7 @@ import { Run, TimeRef } from '../../livesplit-core';
 export class RunParser {
   async getPersonalBest(splits: File): Promise<PersonalBest> {
     const fileContents = await splits.text();
-    const parseResult = Run.parseString(fileContents, '');
+    using parseResult = Run.parseString(fileContents, '');
     if (!parseResult.parsedSuccessfully()) {
       throw new Error('failed to parse splits file.');
     }
@@ -29,43 +29,55 @@ export class RunParser {
       throw new Error('no personal best time recorded.');
     }
     const useGameTime = pbGameTime !== null;
-    const pbSeconds = (useGameTime ? pbGameTime : pbRealTime)!.totalSeconds();
 
+    // since we pull previous PB from the attempt history, we need to pull PB from there as well.
+    // otherwise, a manually-adjusted final split time may cause the PB attempt to get picked as the previous PB
+    let pbSeconds = Infinity;
+    let pbIndex: number | undefined = undefined;
     let previousPbSeconds = Infinity;
     let previousPbIndex: number | undefined = undefined;
     const attemptCount = run.attemptHistoryLen();
     for (let i = 0; i < attemptCount; i++) {
       const attempt = run.attemptHistoryIndex(i);
+      if (attempt.index() < 1) {
+        // only use real attempts
+        continue;
+      }
       const attemptSeconds = this.getSeconds(attempt.time(), useGameTime) ?? Infinity;
-      if (attemptSeconds === pbSeconds) {
-        break;
-      } else if (attemptSeconds < previousPbSeconds) {
-        previousPbSeconds = attemptSeconds;
-        previousPbIndex = attempt.index();
+      if (attemptSeconds < pbSeconds) {
+        previousPbSeconds = pbSeconds;
+        previousPbIndex = pbIndex;
+        pbSeconds = attemptSeconds;
+        pbIndex = attempt.index();
       }
     }
 
+    let sumTime = 0;
     let sumPreviousTime = 0;
-    segmentLoop: for (let i = 0; i < segmentCount; i++) {
+    for (let i = 0; i < segmentCount; i++) {
       const segment = run.segment(i);
       const name = segment.name();
-      const time = this.getSeconds(segment.personalBestSplitTime(), useGameTime);
-      if (previousPbIndex !== undefined) {
-        const segmentHistory = segment.segmentHistory().iter();
-        let pastSegment = segmentHistory.next();
-        while (pastSegment !== null && pastSegment.index() <= previousPbIndex) {
-          if (previousPbIndex === pastSegment.index()) {
-            const pastSegmentTime = this.getSeconds(pastSegment.time(), useGameTime);
-            if (pastSegmentTime) {
-              sumPreviousTime += pastSegmentTime;
-              segments.push({ name, time, previousTime: sumPreviousTime });
-              continue segmentLoop;
-            }
+      let time = undefined;
+      let previousTime = undefined;
+      const segmentHistory = segment.segmentHistory().iter();
+      let pastSegment = segmentHistory.next();
+      while (pastSegment !== null && pastSegment.index() <= pbIndex!) {
+        if (previousPbIndex === pastSegment.index()) {
+          const pastSegmentTime = this.getSeconds(pastSegment.time(), useGameTime);
+          if (pastSegmentTime !== undefined) {
+            sumPreviousTime += pastSegmentTime;
+            previousTime = sumPreviousTime;
           }
-          pastSegment = segmentHistory.next();
+        } else if (pbIndex === pastSegment.index()) {
+          const pastSegmentTime = this.getSeconds(pastSegment.time(), useGameTime);
+          if (pastSegmentTime !== undefined) {
+            sumTime += pastSegmentTime;
+            time = sumTime;
+          }
         }
+        pastSegment = segmentHistory.next();
       }
-      segments.push({ name, time });
+      segments.push({ name, time, previousTime });
     }
 
     return { game, category, segments, time: pbSeconds };
@@ -84,7 +96,7 @@ export interface PersonalBest {
 }
 
 export interface PbSegment {
-  name: string;
-  time?: number;
-  previousTime?: number;
+  readonly name: string;
+  readonly time?: number;
+  readonly previousTime?: number;
 }
