@@ -6,19 +6,27 @@ Little web app that turns LiveSplit splits into an ASCII art display.
 
 You need to install [Rust](https://rustup.rs/) first and add the `wasm32-unknown-unknown` target:
 
-`rustup target add wasm32-unknown-unknown`
+```bash
+rustup target add wasm32-unknown-unknown
+```
 
 You also need to install the `wasm-bindgen` CLI:
 
-`cargo install wasm-bindgen-cli`.
+```bash
+cargo install wasm-bindgen-cli
+```
 
 Install dependencies with your package manager of choice. e.g.
 
-`pnpm install`
+```bash
+pnpm install
+```
 
 Then run the `build:core` script to build `livesplit-core` and generate the wasm + TypeScript bindings. These will go in `src/livesplit-core`.
 
-`pnpm run build:core`
+```bash
+pnpm run build:core
+```
 
 Now you can do the normal Angular stuff to build, run the dev server, etc.
 
