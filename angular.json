@@ -20,6 +20,8 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "baseHref": "/pb-pasta/",
+            "deployUrl": "/pb-pasta/",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
