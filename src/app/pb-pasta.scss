@@ -6,8 +6,6 @@ main {
     column-gap: 50px;
     row-gap: 25px;
     height: max-content;
-    width: 100%;
-    max-width: 700px;
     justify-content: center;
 }
 
@@ -25,12 +23,20 @@ main {
     width: 300px;
 }
 
+@media screen and (min-width: 2600px) {
+    .left-side, .right-side {
+        width: 600px;
+        font-size: 1.63rem;
+    }
+}
+
 h1 {
     margin: 0;
 }
 
 input {
     max-width: 100%;
+    font-size: calc(100% * 25 / 30); // .83333333...
 }
 
 .drop-area {
@@ -49,11 +55,19 @@ input {
     }
 }
 
+@media screen and (max-width: 665px) {
+    .drop-area {
+        display: none;
+    }
+}
+
 output {
-    display: block;
+    display: grid;
+    justify-items: center;
+
     box-sizing: border-box;
     height: calc(19lh + 14px);
-    padding: 6px;
+    padding: 6px 4px;
 
     font-family: monospace;
     white-space: preserve;
@@ -73,6 +87,7 @@ output {
     border-radius: 8px;
     color: currentColor;
     font-family: $ui-font;
+    font-size: calc(100% * 25 / 30); // .83333333...
 
     &:hover:not(:active) {
         background-color: oklab(from var(--bg-color) calc(l - 0.05) a b);
